@@ -20,9 +20,6 @@
         <span class="w-8 h-8 rounded-lg bg-amber-300 border-2 border-slate-900 flex items-center justify-center">D</span>
         <span>DEPSYNC</span>
       </div>
-      <span class="px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-xs font-semibold">
-        Limit: <strong id="limitVal">3</strong>
-      </span>
     </div>
   </header>
 
@@ -34,17 +31,12 @@
         <button id="tVer" onclick="tab('ver')" class="py-2 rounded-lg bg-white text-slate-900">2 · VERIFIKASI</button>
       </div>
 
-      <div>
-        <label class="block text-xs font-bold mb-1">X-APIKEY (Lokal)</label>
-        <input id="keyInp" type="password" oninput="saveKey()" placeholder="Tempel x-apikey..." class="w-full px-3 py-2 rounded-xl border-2 border-slate-900 text-sm font-mono" />
-      </div>
-
       <div id="pSend" class="space-y-3">
         <div>
           <label class="block text-xs font-bold mb-1">ALAMAT GMAIL</label>
           <input id="mailSend" type="email" placeholder="user@gmail.com" class="w-full px-3 py-2.5 rounded-xl border-2 border-slate-900 text-sm" />
         </div>
-        <button id="btnSend" onclick="sendLink()" class="btn w-full py-3 rounded-xl bg-blue-600 text-white font-extrabold text-sm">
+        <button onclick="sendLink()" class="btn w-full py-3 rounded-xl bg-blue-600 text-white font-extrabold text-sm">
           KIRIM MAGIC LINK
         </button>
         <div id="sentBox" class="hidden p-3 rounded-xl bg-amber-200 border-2 border-slate-900 text-xs space-y-2">
@@ -62,7 +54,7 @@
           <label class="block text-xs font-bold mb-1">MAGIC LINK DARI EMAIL</label>
           <input id="linkVer" type="url" placeholder="https://..." class="w-full px-3 py-2.5 rounded-xl border-2 border-slate-900 text-sm" />
         </div>
-        <button id="btnVer" onclick="verifyLink()" class="btn w-full py-3 rounded-xl bg-amber-300 text-slate-900 font-extrabold text-sm">
+        <button onclick="verifyLink()" class="btn w-full py-3 rounded-xl bg-amber-300 text-slate-900 font-extrabold text-sm">
           VERIFIKASI & AKTIFKAN
         </button>
         <div id="verBox" class="hidden p-3 rounded-xl bg-emerald-200 border-2 border-slate-900 text-xs space-y-2">
@@ -83,5 +75,4 @@
 
   <script src="./app.js"></script>
 </body>
-  </html>
-  
+</html>
