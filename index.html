@@ -54,7 +54,7 @@
       </div>
 
       <div class="flex items-center gap-2.5">
-        <!-- Indikator Limit Lebih Halus -->
+        <!-- Indikator Limit Halus -->
         <div
           id="limitBadge"
           class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-300 text-xs font-semibold"
@@ -101,7 +101,7 @@
           AKTIVASI<br>PREMIUM
         </h1>
         <p class="text-slate-600 mt-3 text-sm sm:text-base font-medium leading-relaxed">
-          Kirim magic link ke Gmail, tempel linknya, Alight Motion Premium 1 tahun langsung aktif. Tanpa kata sandi.[span_4](start_span)[span_4](end_span)
+          Kirim magic link ke Gmail, tempel linknya, Alight Motion Premium 1 tahun langsung aktif. Tanpa kata sandi.[span_5](start_span)[span_5](end_span)
         </p>
       </div>
 
@@ -126,7 +126,7 @@
           </button>
         </div>
 
-        <!-- API Key Lokal (Tersimpan di browser perangkat Anda) -->
+        <!-- API Key Lokal -->
         <div class="bg-slate-50 border border-slate-300 rounded-xl p-3 space-y-1.5">
           <div class="flex items-center justify-between">
             <label for="apiKeyInput" class="text-[11px] font-bold uppercase tracking-wider text-slate-600">
@@ -243,7 +243,7 @@
           <code class="text-base font-bold">/api/send</code>
         </div>
         <h2 class="text-xl font-extrabold">🔗 KIRIM MAGIC LINK</h2>
-        <p class="text-sm text-slate-600">Kirim magic link Alight Motion ke Gmail target.[span_5](start_span)[span_5](end_span)</p>
+        <p class="text-sm text-slate-600">Kirim magic link Alight Motion ke Gmail target.[span_6](start_span)[span_6](end_span)</p>
         <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm">
 <pre id="reqSend">const r = await fetch("https://am.dapjisync.my.id/api/send", {
   method: "POST",
@@ -257,7 +257,7 @@
     <section id="verifikasi-aktifkan" class="space-y-4">
       <div class="card-comic p-5 sm:p-6 space-y-3">
         <h2 class="text-xl font-extrabold">🛡️ VERIFIKASI & AKTIFKAN</h2>
-        <p class="text-sm text-slate-600">Tempel magic link dari email untuk aktivasi Premium 1 tahun.[span_6](start_span)[span_6](end_span)</p>
+        <p class="text-sm text-slate-600">Tempel magic link dari email untuk aktivasi Premium 1 tahun.[span_7](start_span)[span_7](end_span)</p>
         <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm">
 <pre id="reqVerify">const r = await fetch("https://am.dapjisync.my.id/api/verify", {
   method: "POST",
@@ -275,7 +275,7 @@
           <code class="text-base font-bold">/api/bulk</code>
         </div>
         <h2 class="text-xl font-extrabold">★ GENERATE MASSAL</h2>
-        <p class="text-sm text-slate-600">Buat beberapa akun Premium sekaligus dengan email sementara otomatis.[span_7](start_span)[span_7](end_span)</p>
+        <p class="text-sm text-slate-600">Buat beberapa akun Premium sekaligus dengan email sementara otomatis.[span_8](start_span)[span_8](end_span)</p>
         <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm">
 <pre id="reqBulk">const r = await fetch("https://am.dapjisync.my.id/api/bulk", {
   method: "POST",
@@ -301,10 +301,8 @@
   </div>
 
   <script>
-    const BASE_API = "https://am.dapjisync.my.id";
     const STORAGE_KEY = "depsync_x_apikey";
 
-    // Muat API Key tersimpan saat halaman dibuka
     (function initApiKey() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -374,6 +372,26 @@
       document.getElementById("terminalLog").innerText = text;
     }
 
+    async function postViaProxy(path, payload) {
+      const apiKey = getApiKey();
+      const res = await fetch("/api/proxy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path, payload, apiKey })
+      });
+
+      const rawText = await res.text();
+      let parsed;
+      try {
+        parsed = JSON.parse(rawText);
+      } catch {
+        parsed = rawText;
+      }
+
+      updateLimitFromResponse(parsed);
+      return { status: res.status, data: parsed };
+    }
+
     async function handleSendLink() {
       const apiKey = getApiKey();
       const gmail = document.getElementById("gmailSendInput").value.trim();
@@ -390,34 +408,13 @@
 
       btn.disabled = true;
       btn.classList.add("opacity-70");
-      setLog(`[INFO] Mengirim magic link ke ${gmail} via POST /api/send...`);
+      setLog(`[INFO] Mengirim magic link ke ${gmail} via /api/proxy -> /api/send...`);
 
       try {
-        const res = await fetch(`${BASE_API}/api/send`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-apikey": apiKey
-          },
-          body: JSON.stringify({ gmail })
-        });
-
-        const rawText = await res.text();
-        let parsed;
-        try {
-          parsed = JSON.parse(rawText);
-        } catch {
-          parsed = rawText;
-        }
-
-        updateLimitFromResponse(parsed);
-        setLog(`[HTTP ${res.status}]\n` + (typeof parsed === "string" ? parsed : JSON.stringify(parsed, null, 2)));
+        const result = await postViaProxy("/api/send", { gmail });
+        setLog(`[HTTP ${result.status}]\n` + (typeof result.data === "string" ? result.data : JSON.stringify(result.data, null, 2)));
       } catch (err) {
-        setLog(
-          `[NETWORK/CORS ERROR] Tidak dapat mengirim request langsung dari browser.\n` +
-          `Detail: ${err.message}\n` +
-          `Kemungkinan server API memblokir request lintas domain (CORS) dari domain Vercel.`
-        );
+        setLog(`[ERROR] Gagal memanggil /api/proxy: ${err.message}`);
       } finally {
         btn.disabled = false;
         btn.classList.remove("opacity-70");
@@ -441,34 +438,13 @@
 
       btn.disabled = true;
       btn.classList.add("opacity-70");
-      setLog(`[INFO] Memverifikasi magic link untuk ${gmail} via POST /api/verify...`);
+      setLog(`[INFO] Memverifikasi magic link untuk ${gmail} via /api/proxy -> /api/verify...`);
 
       try {
-        const res = await fetch(`${BASE_API}/api/verify`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-apikey": apiKey
-          },
-          body: JSON.stringify({ gmail, link })
-        });
-
-        const rawText = await res.text();
-        let parsed;
-        try {
-          parsed = JSON.parse(rawText);
-        } catch {
-          parsed = rawText;
-        }
-
-        updateLimitFromResponse(parsed);
-        setLog(`[HTTP ${res.status}]\n` + (typeof parsed === "string" ? parsed : JSON.stringify(parsed, null, 2)));
+        const result = await postViaProxy("/api/verify", { gmail, link });
+        setLog(`[HTTP ${result.status}]\n` + (typeof result.data === "string" ? result.data : JSON.stringify(result.data, null, 2)));
       } catch (err) {
-        setLog(
-          `[NETWORK/CORS ERROR] Tidak dapat mengirim request langsung dari browser.\n` +
-          `Detail: ${err.message}\n` +
-          `Kemungkinan server API memblokir request lintas domain (CORS) dari domain Vercel.`
-        );
+        setLog(`[ERROR] Gagal memanggil /api/proxy: ${err.message}`);
       } finally {
         btn.disabled = false;
         btn.classList.remove("opacity-70");
@@ -486,4 +462,5 @@
     }
   </script>
 </body>
-</html>
+          </html>
+          
