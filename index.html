@@ -3,464 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DepSync — Aktivasi Premium & Docs</title>
+  <title>DepSync — Aktivasi Premium</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #eef2ff;
-      background-image: radial-gradient(#cbd5e1 1.25px, transparent 1.25px);
-      background-size: 18px 18px;
-      color: #0f172a;
-    }
-    code, pre {
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .card-comic {
-      background: #ffffff;
-      border: 2.5px solid #0f172a;
-      box-shadow: 5px 5px 0px #0f172a;
-      border-radius: 20px;
-    }
-    .btn-comic {
-      border: 2.5px solid #0f172a;
-      box-shadow: 3px 3px 0px #0f172a;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-    }
-    .btn-comic:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0px #0f172a;
-    }
-    .title-comic {
-      color: #60a5fa;
-      -webkit-text-stroke: 2px #0f172a;
-      text-shadow: 3px 3px 0px #0f172a;
-    }
+    body { font-family: system-ui, sans-serif; background: #eef2ff; color: #0f172a; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .box { background: #fff; border: 2px solid #0f172a; box-shadow: 4px 4px 0 #0f172a; border-radius: 16px; }
+    .btn { border: 2px solid #0f172a; box-shadow: 2px 2px 0 #0f172a; }
+    .btn:active { transform: translate(2px, 2px); box-shadow: none; }
   </style>
 </head>
-<body class="min-h-screen pb-24">
-
-  <!-- Topbar -->
-  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b-2 border-slate-900">
-    <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-amber-300 border-2 border-slate-900 flex items-center justify-center font-extrabold text-slate-900">
-          D
-        </div>
-        <span class="font-extrabold text-lg tracking-tight">DEPSYNC</span>
+<body class="min-h-screen pb-16">
+  <header class="sticky top-0 z-20 bg-white border-b-2 border-slate-900">
+    <div class="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2 font-extrabold text-base">
+        <span class="w-8 h-8 rounded-lg bg-amber-300 border-2 border-slate-900 flex items-center justify-center">D</span>
+        <span>DEPSYNC</span>
       </div>
-
-      <div class="flex items-center gap-2.5">
-        <!-- Indikator Limit Halus -->
-        <div
-          id="limitBadge"
-          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-300 text-xs font-semibold"
-        >
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>Limit: <strong id="limitValue" class="text-slate-900 font-bold">3</strong></span>
-        </div>
-
-        <button
-          onclick="toggleNav()"
-          aria-label="Navigasi"
-          class="w-9 h-9 rounded-xl bg-amber-300 border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] flex items-center justify-center font-extrabold text-slate-900"
-        >
-          ☰
-        </button>
-      </div>
+      <span class="px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-xs font-semibold">
+        Limit: <strong id="limitVal">3</strong>
+      </span>
     </div>
-
-    <!-- Quick Navigation -->
-    <nav id="quickNav" class="hidden border-t-2 border-slate-900 bg-amber-50">
-      <div class="max-w-3xl mx-auto px-4 py-3 flex flex-wrap gap-2 text-xs font-extrabold">
-        <a href="#aktivasi-premium" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-amber-300 border-2 border-slate-900">
-          Aktivasi Premium
-        </a>
-        <a href="#kirim-magic-link" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900">
-          POST /api/send
-        </a>
-        <a href="#verifikasi-aktifkan" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900">
-          Verifikasi & Aktifkan
-        </a>
-        <a href="#generate-massal" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900">
-          POST /api/bulk
-        </a>
-      </div>
-    </nav>
   </header>
 
-  <main class="max-w-3xl mx-auto px-4 pt-6 space-y-8">
+  <main class="max-w-2xl mx-auto px-4 pt-5 space-y-5">
+    <div class="box p-4 space-y-4">
+      <h1 class="text-2xl font-extrabold text-blue-600">AKTIVASI PREMIUM</h1>
+      <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl border-2 border-slate-900 text-xs font-extrabold">
+        <button id="tSend" onclick="tab('send')" class="py-2 rounded-lg bg-slate-900 text-amber-300">1 · KIRIM LINK</button>
+        <button id="tVer" onclick="tab('ver')" class="py-2 rounded-lg bg-white text-slate-900">2 · VERIFIKASI</button>
+      </div>
 
-    <!-- BAGIAN AKTIVASI PREMIUM -->
-    <section id="aktivasi-premium" class="space-y-4">
       <div>
-        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-none title-comic">
-          AKTIVASI<br>PREMIUM
-        </h1>
-        <p class="text-slate-600 mt-3 text-sm sm:text-base font-medium leading-relaxed">
-          Kirim magic link ke Gmail, tempel linknya, Alight Motion Premium 1 tahun langsung aktif. Tanpa kata sandi.[span_5](start_span)[span_5](end_span)
-        </p>
+        <label class="block text-xs font-bold mb-1">X-APIKEY (Lokal)</label>
+        <input id="keyInp" type="password" oninput="saveKey()" placeholder="Tempel x-apikey..." class="w-full px-3 py-2 rounded-xl border-2 border-slate-900 text-sm font-mono" />
       </div>
 
-      <!-- Card Form Kirim Link / Verifikasi -->
-      <div class="card-comic p-4 sm:p-5 space-y-4">
-        <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-2xl border-2 border-slate-900">
-          <button
-            id="tabSend"
-            type="button"
-            onclick="switchTab('send')"
-            class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-[#111c3a] text-amber-300 border-2 border-slate-900"
-          >
-            1 · KIRIM LINK
-          </button>
-          <button
-            id="tabVerify"
-            type="button"
-            onclick="switchTab('verify')"
-            class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-slate-900 border-2 border-transparent"
-          >
-            🛡️ 2 · VERIFIKASI
-          </button>
+      <div id="pSend" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold mb-1">ALAMAT GMAIL</label>
+          <input id="mailSend" type="email" placeholder="user@gmail.com" class="w-full px-3 py-2.5 rounded-xl border-2 border-slate-900 text-sm" />
         </div>
-
-        <!-- API Key Lokal -->
-        <div class="bg-slate-50 border border-slate-300 rounded-xl p-3 space-y-1.5">
-          <div class="flex items-center justify-between">
-            <label for="apiKeyInput" class="text-[11px] font-bold uppercase tracking-wider text-slate-600">
-              🔑 X-APIKEY (Disimpan lokal di browser)
-            </label>
-            <button
-              type="button"
-              onclick="clearApiKey()"
-              class="text-[11px] font-semibold text-slate-500 hover:text-slate-900 underline"
-            >
-              Hapus
-            </button>
-          </div>
-          <input
-            id="apiKeyInput"
-            type="password"
-            placeholder="Tempel x-apikey Anda di sini..."
-            oninput="saveApiKey()"
-            class="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-xs sm:text-sm font-mono bg-white focus:outline-none focus:border-slate-900"
-          />
-        </div>
-
-        <!-- Form 1: Kirim Link -->
-        <div id="panelSend" class="space-y-4">
-          <div>
-            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-2">
-              ✉️ ALAMAT GMAIL
-            </label>
-            <input
-              id="gmailSendInput"
-              type="email"
-              placeholder="user@gmail.com"
-              class="w-full px-4 py-3 rounded-xl border-2 border-slate-900 text-sm sm:text-base font-medium bg-white focus:outline-none focus:bg-amber-50/50"
-            />
-          </div>
-
-          <button
-            id="btnSendLink"
-            type="button"
-            onclick="handleSendLink()"
-            class="btn-comic w-full py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm sm:text-base tracking-wide"
-          >
-            ✈️ KIRIM MAGIC LINK
-          </button>
-        </div>
-
-        <!-- Form 2: Verifikasi -->
-        <div id="panelVerify" class="hidden space-y-4">
-          <div>
-            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-2">
-              ✉️ ALAMAT GMAIL
-            </label>
-            <input
-              id="gmailVerifyInput"
-              type="email"
-              placeholder="user@gmail.com"
-              class="w-full px-4 py-3 rounded-xl border-2 border-slate-900 text-sm sm:text-base font-medium bg-white focus:outline-none focus:bg-amber-50/50"
-            />
-          </div>
-
-          <div>
-            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-2">
-              🔗 MAGIC LINK DARI EMAIL
-            </label>
-            <input
-              id="magicLinkInput"
-              type="url"
-              placeholder="https://alight-creative.firebaseapp.com/..."
-              class="w-full px-4 py-3 rounded-xl border-2 border-slate-900 text-sm sm:text-base font-medium bg-white focus:outline-none focus:bg-amber-50/50"
-            />
-          </div>
-
-          <button
-            id="btnVerifyLink"
-            type="button"
-            onclick="handleVerifyLink()"
-            class="btn-comic w-full py-3.5 px-4 rounded-xl bg-amber-300 hover:bg-amber-400 text-slate-900 font-extrabold text-sm sm:text-base tracking-wide"
-          >
-            🛡️ VERIFIKASI & AKTIFKAN
-          </button>
+        <button id="btnSend" onclick="sendLink()" class="btn w-full py-3 rounded-xl bg-blue-600 text-white font-extrabold text-sm">
+          KIRIM MAGIC LINK
+        </button>
+        <div id="sentBox" class="hidden p-3 rounded-xl bg-amber-200 border-2 border-slate-900 text-xs space-y-2">
+          <p id="sentMsg" class="font-semibold"></p>
+          <button onclick="toVerify()" class="btn px-3 py-1.5 rounded-lg bg-white font-extrabold">LANJUT VERIFIKASI</button>
         </div>
       </div>
 
-      <!-- Terminal Log Card -->
-      <div class="card-comic overflow-hidden">
-        <div class="px-4 py-2.5 bg-white border-b-2 border-slate-900 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="flex items-center gap-1.5">
-              <span class="w-3 h-3 rounded-full bg-rose-500 border border-slate-900 inline-block"></span>
-              <span class="w-3 h-3 rounded-full bg-amber-400 border border-slate-900 inline-block"></span>
-              <span class="w-3 h-3 rounded-full bg-emerald-400 border border-slate-900 inline-block"></span>
-            </div>
-            <span class="text-xs font-extrabold font-mono text-slate-800">AM_TERMINAL.LOG</span>
-          </div>
-          <button
-            type="button"
-            onclick="copyCode('terminalLog', this)"
-            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-2.5 py-1 rounded-lg"
-          >
-            📋
-          </button>
+      <div id="pVer" class="hidden space-y-3">
+        <div>
+          <label class="block text-xs font-bold mb-1">ALAMAT GMAIL</label>
+          <input id="mailVer" type="email" placeholder="user@gmail.com" class="w-full px-3 py-2.5 rounded-xl border-2 border-slate-900 text-sm" />
         </div>
-        <div class="bg-[#111c3a] text-slate-100 p-4 text-xs sm:text-sm font-mono overflow-x-auto min-h-[76px]">
-          <pre id="terminalLog" class="whitespace-pre-wrap"><span class="text-amber-300">[SYSTEM]</span> Siap digunakan.</pre>
+        <div>
+          <label class="block text-xs font-bold mb-1">MAGIC LINK DARI EMAIL</label>
+          <input id="linkVer" type="url" placeholder="https://..." class="w-full px-3 py-2.5 rounded-xl border-2 border-slate-900 text-sm" />
+        </div>
+        <button id="btnVer" onclick="verifyLink()" class="btn w-full py-3 rounded-xl bg-amber-300 text-slate-900 font-extrabold text-sm">
+          VERIFIKASI & AKTIFKAN
+        </button>
+        <div id="verBox" class="hidden p-3 rounded-xl bg-emerald-200 border-2 border-slate-900 text-xs space-y-2">
+          <p id="verMsg" class="font-semibold"></p>
+          <button onclick="resetAll()" class="btn px-3 py-1.5 rounded-lg bg-white font-extrabold">RESET</button>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- DOKUMENTASI API -->
-    <section id="kirim-magic-link" class="space-y-4 pt-2">
-      <div class="card-comic p-5 sm:p-6 space-y-3">
-        <div class="flex items-center gap-2.5">
-          <span class="px-3 py-1 rounded-full bg-amber-300 border-2 border-slate-900 font-extrabold text-xs">POST</span>
-          <code class="text-base font-bold">/api/send</code>
-        </div>
-        <h2 class="text-xl font-extrabold">🔗 KIRIM MAGIC LINK</h2>
-        <p class="text-sm text-slate-600">Kirim magic link Alight Motion ke Gmail target.[span_6](start_span)[span_6](end_span)</p>
-        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm">
-<pre id="reqSend">const r = await fetch("https://am.dapjisync.my.id/api/send", {
-  method: "POST",
-  headers: { "Content-Type": "application/json", "x-apikey": "YOUR_API_KEY" },
-  body: JSON.stringify({ "gmail": "user@gmail.com" })
-});</pre>
-        </div>
+    <div class="box overflow-hidden">
+      <div class="px-4 py-2 border-b-2 border-slate-900 flex justify-between items-center text-xs font-mono font-bold">
+        <span>AM_TERMINAL.LOG</span>
+        <button onclick="copyLog()" class="btn px-2 py-0.5 rounded bg-white">SALIN</button>
       </div>
-    </section>
-
-    <section id="verifikasi-aktifkan" class="space-y-4">
-      <div class="card-comic p-5 sm:p-6 space-y-3">
-        <h2 class="text-xl font-extrabold">🛡️ VERIFIKASI & AKTIFKAN</h2>
-        <p class="text-sm text-slate-600">Tempel magic link dari email untuk aktivasi Premium 1 tahun.[span_7](start_span)[span_7](end_span)</p>
-        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm">
-<pre id="reqVerify">const r = await fetch("https://am.dapjisync.my.id/api/verify", {
-  method: "POST",
-  headers: { "Content-Type": "application/json", "x-apikey": "YOUR_API_KEY" },
-  body: JSON.stringify({ "gmail": "user@gmail.com", "link": "https://alight-creative.firebaseapp.com/..." })
-});</pre>
-        </div>
-      </div>
-    </section>
-
-    <section id="generate-massal" class="space-y-4">
-      <div class="card-comic p-5 sm:p-6 space-y-3">
-        <div class="flex items-center gap-2.5">
-          <span class="px-3 py-1 rounded-full bg-amber-300 border-2 border-slate-900 font-extrabold text-xs">POST</span>
-          <code class="text-base font-bold">/api/bulk</code>
-        </div>
-        <h2 class="text-xl font-extrabold">★ GENERATE MASSAL</h2>
-        <p class="text-sm text-slate-600">Buat beberapa akun Premium sekaligus dengan email sementara otomatis.[span_8](start_span)[span_8](end_span)</p>
-        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm">
-<pre id="reqBulk">const r = await fetch("https://am.dapjisync.my.id/api/bulk", {
-  method: "POST",
-  headers: { "Content-Type": "application/json", "x-apikey": "YOUR_API_KEY" },
-  body: JSON.stringify({ "total": 1, "provider": "akunlama" })
-});</pre>
-        </div>
-      </div>
-    </section>
-
+      <pre id="logOut" class="p-4 bg-slate-950 text-slate-100 text-xs whitespace-pre-wrap">[SYSTEM] Siap digunakan.</pre>
+    </div>
   </main>
 
-  <!-- Bottom Floating Nav -->
-  <div class="fixed bottom-4 inset-x-0 z-30 px-4">
-    <div class="max-w-md mx-auto bg-white border-2.5 border-slate-900 shadow-[4px_4px_0px_#0f172a] rounded-full px-5 py-2.5 flex items-center justify-between text-xs font-extrabold">
-      <a href="#aktivasi-premium" class="px-3 py-1.5 rounded-full bg-amber-300 border-2 border-slate-900 text-slate-900">
-        ⚡ Activation
-      </a>
-      <a href="#kirim-magic-link" class="text-slate-700 hover:text-slate-950">Send</a>
-      <a href="#verifikasi-aktifkan" class="text-slate-700 hover:text-slate-950">Verify</a>
-      <a href="#generate-massal" class="text-slate-700 hover:text-slate-950">&lt;/&gt; Docs</a>
-    </div>
-  </div>
-
-  <script>
-    const STORAGE_KEY = "depsync_x_apikey";
-
-    (function initApiKey() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        document.getElementById("apiKeyInput").value = saved;
-      }
-    })();
-
-    function saveApiKey() {
-      const val = document.getElementById("apiKeyInput").value.trim();
-      if (val) {
-        localStorage.setItem(STORAGE_KEY, val);
-      } else {
-        localStorage.removeItem(STORAGE_KEY);
-      }
-    }
-
-    function clearApiKey() {
-      document.getElementById("apiKeyInput").value = "";
-      localStorage.removeItem(STORAGE_KEY);
-      setLog("[SYSTEM] X-APIKEY lokal dihapus.");
-    }
-
-    function getApiKey() {
-      return document.getElementById("apiKeyInput").value.trim();
-    }
-
-    function updateLimitFromResponse(data) {
-      if (!data || typeof data !== "object") return;
-      const limitObj = data.limit;
-      if (limitObj && typeof limitObj === "object") {
-        const val = limitObj.free_left ?? limitObj.remaining ?? limitObj.total;
-        if (val !== undefined && val !== null) {
-          document.getElementById("limitValue").innerText = val;
-        }
-      }
-    }
-
-    function toggleNav(forceState) {
-      const nav = document.getElementById("quickNav");
-      if (typeof forceState === "boolean") {
-        nav.classList.toggle("hidden", !forceState);
-      } else {
-        nav.classList.toggle("hidden");
-      }
-    }
-
-    function switchTab(mode) {
-      const tabSend = document.getElementById("tabSend");
-      const tabVerify = document.getElementById("tabVerify");
-      const panelSend = document.getElementById("panelSend");
-      const panelVerify = document.getElementById("panelVerify");
-
-      if (mode === "send") {
-        tabSend.className = "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-[#111c3a] text-amber-300 border-2 border-slate-900";
-        tabVerify.className = "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-slate-900 border-2 border-transparent";
-        panelSend.classList.remove("hidden");
-        panelVerify.classList.add("hidden");
-      } else {
-        tabVerify.className = "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-[#111c3a] text-amber-300 border-2 border-slate-900";
-        tabSend.className = "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-slate-900 border-2 border-transparent";
-        panelVerify.classList.remove("hidden");
-        panelSend.classList.add("hidden");
-      }
-    }
-
-    function setLog(text) {
-      document.getElementById("terminalLog").innerText = text;
-    }
-
-    async function postViaProxy(path, payload) {
-      const apiKey = getApiKey();
-      const res = await fetch("/api/proxy", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ path, payload, apiKey })
-      });
-
-      const rawText = await res.text();
-      let parsed;
-      try {
-        parsed = JSON.parse(rawText);
-      } catch {
-        parsed = rawText;
-      }
-
-      updateLimitFromResponse(parsed);
-      return { status: res.status, data: parsed };
-    }
-
-    async function handleSendLink() {
-      const apiKey = getApiKey();
-      const gmail = document.getElementById("gmailSendInput").value.trim();
-      const btn = document.getElementById("btnSendLink");
-
-      if (!apiKey) {
-        setLog("[ERROR] Masukkan X-APIKEY terlebih dahulu.");
-        return;
-      }
-      if (!gmail) {
-        setLog("[ERROR] Masukkan alamat Gmail terlebih dahulu.");
-        return;
-      }
-
-      btn.disabled = true;
-      btn.classList.add("opacity-70");
-      setLog(`[INFO] Mengirim magic link ke ${gmail} via /api/proxy -> /api/send...`);
-
-      try {
-        const result = await postViaProxy("/api/send", { gmail });
-        setLog(`[HTTP ${result.status}]\n` + (typeof result.data === "string" ? result.data : JSON.stringify(result.data, null, 2)));
-      } catch (err) {
-        setLog(`[ERROR] Gagal memanggil /api/proxy: ${err.message}`);
-      } finally {
-        btn.disabled = false;
-        btn.classList.remove("opacity-70");
-      }
-    }
-
-    async function handleVerifyLink() {
-      const apiKey = getApiKey();
-      const gmail = document.getElementById("gmailVerifyInput").value.trim();
-      const link = document.getElementById("magicLinkInput").value.trim();
-      const btn = document.getElementById("btnVerifyLink");
-
-      if (!apiKey) {
-        setLog("[ERROR] Masukkan X-APIKEY terlebih dahulu.");
-        return;
-      }
-      if (!gmail || !link) {
-        setLog("[ERROR] Lengkapi alamat Gmail dan magic link terlebih dahulu.");
-        return;
-      }
-
-      btn.disabled = true;
-      btn.classList.add("opacity-70");
-      setLog(`[INFO] Memverifikasi magic link untuk ${gmail} via /api/proxy -> /api/verify...`);
-
-      try {
-        const result = await postViaProxy("/api/verify", { gmail, link });
-        setLog(`[HTTP ${result.status}]\n` + (typeof result.data === "string" ? result.data : JSON.stringify(result.data, null, 2)));
-      } catch (err) {
-        setLog(`[ERROR] Gagal memanggil /api/proxy: ${err.message}`);
-      } finally {
-        btn.disabled = false;
-        btn.classList.remove("opacity-70");
-      }
-    }
-
-    function copyCode(elementId, btn) {
-      const text = document.getElementById(elementId).innerText;
-      navigator.clipboard.writeText(text);
-      const prev = btn.innerText;
-      btn.innerText = "✅";
-      setTimeout(() => {
-        btn.innerText = prev;
-      }, 1500);
-    }
-  </script>
+  <script src="./app.js"></script>
 </body>
-          </html>
-          
+  </html>
+  
