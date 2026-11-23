@@ -1,343 +1,353 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Documentation — DapjiSync Style</title>
+  <title>DepSync — API Docs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <style>
     html { scroll-behavior: smooth; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #09090b; }
-    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .card-comic {
+      background: #ffffff;
+      border: 2.5px solid #0f172a;
+      box-shadow: 4px 4px 0px #0f172a;
+      border-radius: 18px;
+    }
+    .btn-comic {
+      border: 2px solid #0f172a;
+      box-shadow: 3px 3px 0px #0f172a;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn-comic:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #0f172a;
+    }
   </style>
 </head>
-<body class="bg-zinc-950 text-zinc-200 font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
+<body class="min-h-screen pb-16">
 
-  <!-- Top Navbar -->
-  <header class="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <button id="menuBtn" class="lg:hidden p-2 rounded-lg text-zinc-400 hover:bg-zinc-900 hover:text-white">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
+  <!-- Topbar -->
+  <header class="sticky top-0 z-30 bg-white border-b-2 border-slate-900">
+    <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-amber-300 border-2 border-slate-900 flex items-center justify-center font-extrabold text-slate-900">
           D
         </div>
-        <span class="font-semibold text-white tracking-tight text-lg">DapjiSync <span class="text-xs font-mono bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded-full ml-1">v1.0</span></span>
+        <span class="font-extrabold text-lg tracking-tight">DEPSYNC</span>
       </div>
 
-      <div class="flex items-center gap-4">
-        <div class="relative hidden sm:block">
-          <input id="searchInput" type="text" placeholder="Cari endpoint..." class="w-64 bg-zinc-900 border border-zinc-800 rounded-lg pl-9 pr-4 py-1.5 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition" />
-          <svg class="w-4 h-4 text-zinc-500 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        </div>
-        <a href="https://github.com" target="_blank" class="text-sm text-zinc-400 hover:text-white transition">GitHub</a>
+      <div class="flex items-center gap-2">
+        <span class="px-3 py-1 rounded-full bg-rose-400 text-slate-900 font-extrabold text-xs border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a]">
+          3 LIMIT
+        </span>
+        <button
+          onclick="toggleNav()"
+          aria-label="Navigasi"
+          class="w-9 h-9 rounded-xl bg-amber-300 border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] flex items-center justify-center font-extrabold text-slate-900"
+        >
+          ☰
+        </button>
       </div>
     </div>
+
+    <!-- Quick Navigation Drawer -->
+    <nav id="quickNav" class="hidden border-t-2 border-slate-900 bg-amber-50">
+      <div class="max-w-3xl mx-auto px-4 py-3 flex flex-wrap gap-2 text-xs font-extrabold">
+        <a href="#kirim-magic-link" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900 hover:bg-amber-200">
+          POST /api/send
+        </a>
+        <a href="#verifikasi-aktifkan" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900 hover:bg-amber-200">
+          Verifikasi & Aktifkan
+        </a>
+        <a href="#generate-massal" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900 hover:bg-amber-200">
+          POST /api/bulk
+        </a>
+      </div>
+    </nav>
   </header>
 
-  <!-- Main Container -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
+  <main class="max-w-3xl mx-auto px-4 pt-6 space-y-8">
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-zinc-950 border-r border-zinc-800/80 pt-20 pb-10 px-4 transform -translate-x-full lg:translate-x-0 lg:static lg:pt-8 lg:block transition-transform duration-200 ease-in-out">
-      <nav class="space-y-6 text-sm" id="navMenu">
-        <div>
-          <p class="font-semibold text-zinc-400 uppercase tracking-wider text-xs mb-3 px-2">Memulai</p>
-          <ul class="space-y-1">
-            <li><a href="#pengenalan" class="nav-link block px-2 py-1.5 rounded-md text-zinc-300 hover:bg-zinc-900 hover:text-white transition">Pengenalan</a></li>
-            <li><a href="#autentikasi" class="nav-link block px-2 py-1.5 rounded-md text-zinc-300 hover:bg-zinc-900 hover:text-white transition">Autentikasi</a></li>
-            <li><a href="#status-code" class="nav-link block px-2 py-1.5 rounded-md text-zinc-300 hover:bg-zinc-900 hover:text-white transition">Kode Status</a></li>
-          </ul>
+    <!-- 1. KIRIM MAGIC LINK -->
+    <section id="kirim-magic-link" class="space-y-4">
+      <div class="card-comic p-5 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <span class="px-3 py-1 rounded-full bg-amber-300 border-2 border-slate-900 font-extrabold text-xs">
+            POST
+          </span>
+          <code class="text-base sm:text-lg font-bold text-slate-900">/api/send</code>
         </div>
 
         <div>
-          <p class="font-semibold text-zinc-400 uppercase tracking-wider text-xs mb-3 px-2">API Endpoints</p>
-          <ul class="space-y-1">
-            <li>
-              <a href="#get-users" class="nav-link flex items-center justify-between px-2 py-1.5 rounded-md text-zinc-300 hover:bg-zinc-900 hover:text-white transition">
-                <span>Ambil Data User</span>
-                <span class="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400">GET</span>
-              </a>
-            </li>
-            <li>
-              <a href="#create-transaction" class="nav-link flex items-center justify-between px-2 py-1.5 rounded-md text-zinc-300 hover:bg-zinc-900 hover:text-white transition">
-                <span>Buat Transaksi</span>
-                <span class="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400">POST</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </aside>
-
-    <!-- Content Area -->
-    <main class="flex-1 lg:pl-10 py-8 max-w-4xl space-y-16">
-
-      <!-- Section: Pengenalan -->
-      <section id="pengenalan" class="doc-section space-y-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-medium">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Semua Sistem Normal
-        </div>
-        <h1 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Dokumentasi API</h1>
-        <p class="text-zinc-400 leading-relaxed">
-          Selamat datang di dokumentasi resmi REST API. API ini dirancang menggunakan arsitektur RESTful standar dengan format pertukaran data <code class="text-indigo-400 font-mono text-sm">JSON</code>.
-        </p>
-
-        <div class="bg-zinc-900/70 border border-zinc-800 rounded-xl p-4 mt-4">
-          <p class="text-xs text-zinc-400 uppercase font-semibold mb-2">Base URL</p>
-          <div class="flex items-center justify-between bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 font-mono text-sm">
-            <span class="text-emerald-400" id="baseUrlText">https://api.domain-anda.my.id/v1</span>
-            <button onclick="copyText('baseUrlText', this)" class="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-2.5 py-1 rounded transition">Copy</button>
-          </div>
-        </div>
-      </section>
-
-      <hr class="border-zinc-800/80" />
-
-      <!-- Section: Autentikasi -->
-      <section id="autentikasi" class="doc-section space-y-4">
-        <h2 class="text-2xl font-bold text-white">Autentikasi</h2>
-        <p class="text-zinc-400 leading-relaxed">
-          Setiap permintaan ke API wajib menyertakan <code class="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded font-mono text-sm">API Key</code> pada bagian Header HTTP menggunakan skema Bearer Token.
-        </p>
-
-        <div class="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-2 bg-zinc-900 border-b border-zinc-800 text-xs text-zinc-400 font-mono">
-            <span>HTTP Header</span>
-            <button onclick="copyText('authCode', this)" class="hover:text-white transition">Copy</button>
-          </div>
-          <pre id="authCode" class="p-4 text-sm font-mono text-zinc-300 overflow-x-auto">Authorization: Bearer YOUR_SECRET_API_KEY
-Accept: application/json</pre>
-        </div>
-      </section>
-
-      <hr class="border-zinc-800/80" />
-
-      <!-- Section: Endpoint 1 -->
-      <section id="get-users" class="doc-section space-y-5">
-        <div class="flex flex-wrap items-center gap-3">
-          <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">GET</span>
-          <code class="text-lg font-mono text-white">/users/{id}</code>
-        </div>
-        <h2 class="text-xl font-semibold text-white">Ambil Informasi Pengguna</h2>
-        <p class="text-zinc-400 text-sm leading-relaxed">Mengambil detail profil pengguna berdasarkan ID unik yang terdaftar di sistem.</p>
-
-        <!-- Parameters Table -->
-        <div class="border border-zinc-800 rounded-xl overflow-hidden">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-zinc-900/90 text-zinc-400 border-b border-zinc-800 text-xs uppercase">
-              <tr>
-                <th class="px-4 py-3">Parameter</th>
-                <th class="px-4 py-3">Tipe</th>
-                <th class="px-4 py-3">Keterangan</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-zinc-800/80">
-              <tr>
-                <td class="px-4 py-3 font-mono text-indigo-400">id <span class="text-red-400 text-xs">*</span></td>
-                <td class="px-4 py-3 font-mono text-zinc-400">string</td>
-                <td class="px-4 py-3 text-zinc-300">ID unik pengguna (Path parameter)</td>
-              </tr>
-            </tbody>
-          </table>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            🔗 KIRIM MAGIC LINK
+          </h1>
+          <p class="text-slate-600 mt-1 text-sm sm:text-base">
+            Kirim magic link Alight Motion ke Gmail target.
+          </p>
         </div>
 
-        <!-- Code Example -->
-        <div class="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-2 border-b border-zinc-800 text-xs text-zinc-400 font-mono">
-            <span>Contoh Request (cURL)</span>
-            <button onclick="copyText('curlGetUser', this)" class="hover:text-white transition">Copy</button>
-          </div>
-          <pre id="curlGetUser" class="p-4 text-sm font-mono text-zinc-300 overflow-x-auto">curl -X GET "https://api.domain-anda.my.id/v1/users/USR-1029" \
-  -H "Authorization: Bearer YOUR_SECRET_API_KEY"</pre>
+        <div class="bg-amber-50 border-2 border-slate-900 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-slate-800">
+          🔒 TIDAK MEMOTONG LIMIT, TAPI AKUN HARUS MASIH PUNYA SISA LIMIT.
         </div>
+      </div>
 
-        <!-- Response Example -->
-        <div class="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-2 border-b border-zinc-800 text-xs font-mono">
-            <span class="text-emerald-400">200 OK — Response</span>
-            <button onclick="copyText('resGetUser', this)" class="text-zinc-400 hover:text-white transition">Copy</button>
-          </div>
-          <pre id="resGetUser" class="p-4 text-sm font-mono text-emerald-300/90 overflow-x-auto">{
+      <div class="card-comic p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+            Contoh Request
+          </span>
+          <button
+            onclick="copyCode('reqSend', this)"
+            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
+          >
+            📋 SALIN
+          </button>
+        </div>
+        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
+<pre id="reqSend">const r = await fetch("https://am.dapjisync.my.id/api/send", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-apikey": "YOUR_API_KEY"
+  },
+  body: JSON.stringify({
+    "gmail": "user@gmail.com"
+  })
+});
+console.log(r.status, await r.json());</pre>
+        </div>
+      </div>
+
+      <div class="card-comic p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+            Contoh Respons 200
+          </span>
+          <button
+            onclick="copyCode('resSend', this)"
+            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
+          >
+            📋 SALIN
+          </button>
+        </div>
+        <div class="bg-[#111c3a] text-emerald-300 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
+<pre id="resSend">{
   "success": true,
-  "data": {
-    "id": "USR-1029",
-    "username": "dapjisync_dev",
-    "status": "active",
-    "created_at": "2026-11-23T10:00:00Z"
-  }
+  "email": "user@gmail.com",
+  "message": "Magic link berhasil dikirim."
 }</pre>
         </div>
+      </div>
+    </section>
 
-        <!-- Interactive Simulator -->
-        <div class="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Simulasi Uji Coba</span>
-            <button onclick="simulateRequest('get-user-output')" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition">
-              Kirim Request Test
-            </button>
-          </div>
-          <pre id="get-user-output" class="hidden p-3 bg-zinc-950 border border-zinc-800 rounded-lg text-xs font-mono text-zinc-300 overflow-x-auto"></pre>
-        </div>
-      </section>
-
-      <hr class="border-zinc-800/80" />
-
-      <!-- Section: Endpoint 2 -->
-      <section id="create-transaction" class="doc-section space-y-5">
-        <div class="flex flex-wrap items-center gap-3">
-          <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-blue-500/15 text-blue-400 border border-blue-500/20">POST</span>
-          <code class="text-lg font-mono text-white">/transactions</code>
-        </div>
-        <h2 class="text-xl font-semibold text-white">Buat Transaksi Baru</h2>
-        <p class="text-zinc-400 text-sm leading-relaxed">Membuat permintaan transaksi baru dan menghasilkan URL pembayaran otomatis.</p>
-
-        <div class="border border-zinc-800 rounded-xl overflow-hidden">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-zinc-900/90 text-zinc-400 border-b border-zinc-800 text-xs uppercase">
-              <tr>
-                <th class="px-4 py-3">Body Field</th>
-                <th class="px-4 py-3">Tipe</th>
-                <th class="px-4 py-3">Keterangan</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-zinc-800/80">
-              <tr>
-                <td class="px-4 py-3 font-mono text-indigo-400">amount <span class="text-red-400 text-xs">*</span></td>
-                <td class="px-4 py-3 font-mono text-zinc-400">integer</td>
-                <td class="px-4 py-3 text-zinc-300">Nominal transaksi dalam IDR (minimal 1000)</td>
-              </tr>
-              <tr>
-                <td class="px-4 py-3 font-mono text-indigo-400">reference_id <span class="text-red-400 text-xs">*</span></td>
-                <td class="px-4 py-3 font-mono text-zinc-400">string</td>
-                <td class="px-4 py-3 text-zinc-300">ID referensi unik dari sistem Anda</td>
-              </tr>
-            </tbody>
-          </table>
+    <!-- 2. VERIFIKASI & AKTIFKAN -->
+    <section id="verifikasi-aktifkan" class="space-y-4">
+      <div class="card-comic p-5 sm:p-6 space-y-4">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            🛡️ VERIFIKASI & AKTIFKAN
+          </h2>
+          <p class="text-slate-600 mt-1 text-sm sm:text-base">
+            Tempel magic link dari email untuk aktivasi Premium 1 tahun.
+          </p>
         </div>
 
-        <div class="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
-          <div class="flex items-center justify-between px-4 py-2 border-b border-zinc-800 text-xs text-zinc-400 font-mono">
-            <span>Request Body (JSON)</span>
-            <button onclick="copyText('postBody', this)" class="hover:text-white transition">Copy</button>
-          </div>
-          <pre id="postBody" class="p-4 text-sm font-mono text-zinc-300 overflow-x-auto">{
-  "amount": 50000,
-  "reference_id": "INV-20261123-001"
+        <div class="bg-amber-50 border-2 border-slate-900 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-slate-800">
+          ↻ MEMOTONG 1 LIMIT. DIKEMBALIKAN OTOMATIS JIKA GAGAL. OPSIONAL: ORDERID (CUSTOM ORDER ID, KHUSUS AKUN YANG SUDAH BELI AKSES / LIMIT).
+        </div>
+      </div>
+
+      <div class="card-comic p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+            Contoh Request
+          </span>
+          <button
+            onclick="copyCode('reqVerify', this)"
+            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
+          >
+            📋 SALIN
+          </button>
+        </div>
+        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
+<pre id="reqVerify">const r = await fetch("https://am.dapjisync.my.id/api/verify", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-apikey": "YOUR_API_KEY"
+  },
+  body: JSON.stringify({
+    "gmail": "user@gmail.com",
+    "link": "https://alight-creative.firebaseapp.com/..."
+  })
+});
+console.log(r.status, await r.json());</pre>
+        </div>
+      </div>
+
+      <div class="card-comic p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+            Contoh Respons 200
+          </span>
+          <button
+            onclick="copyCode('resVerify', this)"
+            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
+          >
+            📋 SALIN
+          </button>
+        </div>
+        <div class="bg-[#111c3a] text-emerald-300 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
+<pre id="resVerify">{
+  "ok": true,
+  "success": true,
+  "creator": "depsync",
+  "authenticated": true,
+  "premiumActive": true,
+  "userData": {
+    "email": "user@gmail.com",
+    "status": "ACTIVE",
+    "tier": "Subscriber",
+    "planName": "1-Year VIP Pro",
+    "orderId": "depsync.my.id-XXXXXX",
+    "validUntil": "1 September 2027"
+  },
+  "message": "Verifikasi akun berhasil, Alight Motion VIP Pro aktif.",
+  "limit_used": 1,
+  "limit": { "total": 10, "free_left": 10 }
 }</pre>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <hr class="border-zinc-800/80" />
-
-      <!-- Section: Status Codes -->
-      <section id="status-code" class="doc-section space-y-4">
-        <h2 class="text-2xl font-bold text-white">Kode Status HTTP</h2>
-        <div class="border border-zinc-800 rounded-xl overflow-hidden">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-zinc-900/90 text-zinc-400 border-b border-zinc-800 text-xs uppercase">
-              <tr>
-                <th class="px-4 py-3">Kode</th>
-                <th class="px-4 py-3">Status</th>
-                <th class="px-4 py-3">Deskripsi</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-zinc-800/80">
-              <tr>
-                <td class="px-4 py-3 font-mono text-emerald-400">200</td>
-                <td class="px-4 py-3 font-medium text-white">OK</td>
-                <td class="px-4 py-3 text-zinc-400">Permintaan berhasil diproses.</td>
-              </tr>
-              <tr>
-                <td class="px-4 py-3 font-mono text-amber-400">401</td>
-                <td class="px-4 py-3 font-medium text-white">Unauthorized</td>
-                <td class="px-4 py-3 text-zinc-400">API Key tidak valid atau tidak disertakan.</td>
-              </tr>
-              <tr>
-                <td class="px-4 py-3 font-mono text-red-400">429</td>
-                <td class="px-4 py-3 font-medium text-white">Too Many Requests</td>
-                <td class="px-4 py-3 text-zinc-400">Melebihi batas rate limit per menit.</td>
-              </tr>
-            </tbody>
-          </table>
+    <!-- 3. GENERATE MASSAL -->
+    <section id="generate-massal" class="space-y-4">
+      <div class="card-comic p-5 sm:p-6 space-y-4">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <span class="px-3 py-1 rounded-full bg-amber-300 border-2 border-slate-900 font-extrabold text-xs">
+            POST
+          </span>
+          <code class="text-base sm:text-lg font-bold text-slate-900">/api/bulk</code>
         </div>
-      </section>
 
-      <!-- Footer -->
-      <footer class="pt-10 pb-6 border-t border-zinc-800/80 text-xs text-zinc-500 flex justify-between items-center">
-        <span>© 2026 Dokumentasi API. Dibangun dengan HTML & Tailwind.</span>
-        <span>Hosted on Vercel</span>
-      </footer>
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            ★ GENERATE MASSAL
+          </h2>
+          <p class="text-slate-600 mt-1 text-sm sm:text-base leading-relaxed">
+            Buat beberapa akun Premium sekaligus (maks diatur admin, default 5) (email sementara otomatis). provider: <code class="font-bold text-slate-900">akunlama | generator | emailnator | inboxkitten | tmailcloud | emailqu | random</code> (default <code class="font-bold text-slate-900">akunlama</code>).
+          </p>
+        </div>
 
-    </main>
-  </div>
+        <div class="bg-amber-50 border-2 border-slate-900 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-slate-800">
+          ↻ MEMOTONG SEBANYAK JUMLAH AKUN. LIMIT AKUN YANG GAGAL DIKEMBALIKAN. OPSIONAL: ORDERID (CUSTOM ORDER ID, KHUSUS AKUN YANG SUDAH BELI AKSES / LIMIT).
+        </div>
+      </div>
+
+      <div class="card-comic p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+            Contoh Request
+          </span>
+          <button
+            onclick="copyCode('reqBulk', this)"
+            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
+          >
+            📋 SALIN
+          </button>
+        </div>
+        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
+<pre id="reqBulk">const r = await fetch("https://am.dapjisync.my.id/api/bulk", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-apikey": "YOUR_API_KEY"
+  },
+  body: JSON.stringify({
+    "total": 1,
+    "provider": "akunlama"
+  })
+});
+console.log(r.status, await r.json());</pre>
+        </div>
+      </div>
+
+      <div class="card-comic p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+            Contoh Respons 200
+          </span>
+          <button
+            onclick="copyCode('resBulk', this)"
+            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
+          >
+            📋 SALIN
+          </button>
+        </div>
+        <div class="bg-[#111c3a] text-emerald-300 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
+<pre id="resBulk">{
+  "ok": true,
+  "success": true,
+  "creator": "depsync",
+  "status": true,
+  "total": 1,
+  "successCount": 1,
+  "failCount": 0,
+  "message": "Akun Alight Motion VIP Pro berhasil dibuat.",
+  "batch": [{
+    "ok": true,
+    "success": true,
+    "status": true,
+    "email": "ampremxxxxxx@akunlama.com",
+    "provider": "akunlama",
+    "inbox_link": "https://akunlama.com/inbox/...",
+    "membershipStatus": "active",
+    "tier": "Subscriber",
+    "planName": "1-Year VIP Pro",
+    "subscription": "Yearly Membership",
+    "orderId": "depsync.my.id-XXXXX",
+    "validUntil": "1 September 2027",
+    "message": "Akun Alight Motion VIP Pro aktif."
+  }],
+  "limit_used": 1,
+  "limit": { "total": 10, "free_left": 10 }
+}</pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
 
   <script>
-    // Mobile sidebar toggle
-    const menuBtn = document.getElementById('menuBtn');
-    const sidebar = document.getElementById('sidebar');
-    menuBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('-translate-x-full');
-    });
-
-    // Copy to clipboard
-    function copyText(elementId, btn) {
-      const text = document.getElementById(elementId).innerText;
-      navigator.clipboard.writeText(text);
-      const original = btn.innerText;
-      btn.innerText = 'Copied!';
-      btn.classList.add('text-emerald-400');
-      setTimeout(() => {
-        btn.innerText = original;
-        btn.classList.remove('text-emerald-400');
-      }, 1500);
+    function toggleNav(forceState) {
+      const nav = document.getElementById('quickNav');
+      if (typeof forceState === 'boolean') {
+        nav.classList.toggle('hidden', !forceState);
+      } else {
+        nav.classList.toggle('hidden');
+      }
     }
 
-    // Live Search Filter
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      document.querySelectorAll('.doc-section').forEach(sec => {
-        const match = sec.innerText.toLowerCase().includes(q);
-        sec.style.display = match ? 'block' : 'none';
-      });
-    });
-
-    // Simulated API Response
-    function simulateRequest(outputId) {
-      const out = document.getElementById(outputId);
-      out.classList.remove('hidden');
-      out.innerText = 'Mengirim request ke server...';
+    function copyCode(elementId, btn) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text);
+      const prev = btn.innerText;
+      btn.innerText = '✅ TERSALIN';
       setTimeout(() => {
-        out.innerText = JSON.stringify({
-          status: 200,
-          latency: "42ms",
-          response: {
-            success: true,
-            data: { id: "USR-1029", username: "dapjisync_dev", status: "active" }
-          }
-        }, null, 2);
-      }, 500);
+        btn.innerText = prev;
+      }, 1500);
     }
   </script>
 </body>
-  </html>
-  
+</html>
