@@ -73,6 +73,77 @@
     </div>
   </main>
 
-  <script src="./app.js"></script>
+  <script>
+    const BASE = "https://app.kyzznekoo.my.id";
+    const $ = (id) => document.getElementById(id);
+    const log = (t) => { $("logOut").innerText = t; };
+
+    function tab(m) {
+      const s = m === "send";
+      $("pSend").classList.toggle("hidden", !s);
+      $("pVer").classList.toggle("hidden", s);
+      $("tSend").className = `py-2 rounded-lg ${s ? "bg-slate-900 text-amber-300" : "bg-white text-slate-900"}`;
+      $("tVer").className = `py-2 rounded-lg ${!s ? "bg-slate-900 text-amber-300" : "bg-white text-slate-900"}`;
+    }
+
+    function toVerify() {
+      $("mailVer").value = $("mailSend").value.trim();
+      $("verBox").classList.add("hidden");
+      tab("ver");
+      $("linkVer").focus();
+    }
+
+    function resetAll() {
+      $("sentBox").classList.add("hidden");
+      $("verBox").classList.add("hidden");
+      $("mailSend").value = ""; $("mailVer").value = ""; $("linkVer").value = "";
+      tab("send");
+      log("[SYSTEM] Siap digunakan.");
+    }
+
+    async function sendLink() {
+      const gmail = $("mailSend").value.trim();
+      if (!gmail) return log("[ERROR] Gmail wajib diisi.");
+      $("sentBox").classList.add("hidden");
+      log(`[SEND] Mengirim request ke ${BASE} untuk ${gmail}...`);
+      try {
+        const r = await fetch(`${BASE}/api/send`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ gmail })
+        });
+        const txt = await r.text();
+        let d; try { d = JSON.parse(txt); } catch { d = txt; }
+        if (r.ok && (typeof d !== "object" || d?.success !== false)) {
+          log(`[HTTP ${r.status}]\n` + (typeof d === "string" ? d : JSON.stringify(d, null, 2)));
+          $("sentMsg").innerText = `Permintaan terkirim untuk ${gmail}. Cek inbox/spam lalu klik Lanjut Verifikasi.`;
+          $("sentBox").classList.remove("hidden");
+        } else log(`[HTTP ${r.status}]\n` + (typeof d === "string" ? d : JSON.stringify(d, null, 2)));
+      } catch (e) { log("[ERROR] " + e.message); }
+    }
+
+    async function verifyLink() {
+      const gmail = $("mailVer").value.trim(), link = $("linkVer").value.trim();
+      if (!gmail || !link) return log("[ERROR] Gmail dan magic link wajib diisi.");
+      $("verBox").classList.add("hidden");
+      log(`[VERIFY] Memverifikasi link untuk ${gmail}...`);
+      try {
+        const r = await fetch(`${BASE}/api/verify`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ gmail, link })
+        });
+        const txt = await r.text();
+        let d; try { d = JSON.parse(txt); } catch { d = txt; }
+        if (r.ok && (typeof d !== "object" || d?.success !== false)) {
+          log(`[HTTP ${r.status}]\n` + (typeof d === "string" ? d : JSON.stringify(d, null, 2)));
+          $("verMsg").innerText = `Terverifikasi: ${d?.userData?.email || gmail}`;
+          $("verBox").classList.remove("hidden");
+        } else log(`[HTTP ${r.status}]\n` + (typeof d === "string" ? d : JSON.stringify(d, null, 2)));
+      } catch (e) { log("[ERROR] " + e.message); }
+    }
+
+    function copyLog() { navigator.clipboard.writeText($("logOut").innerText); }
+  </script>
 </body>
 </html>
