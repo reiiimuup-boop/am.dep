@@ -1,8 +1,4 @@
-const KEY_STORE = "depsync_apikey";
 const $ = (id) => document.getElementById(id);
-
-$("keyInp").value = localStorage.getItem(KEY_STORE) || "";
-function saveKey() { localStorage.setItem(KEY_STORE, $("keyInp").value.trim()); }
 function log(t) { $("logOut").innerText = t; }
 
 function tab(m) {
@@ -29,18 +25,14 @@ function resetAll() {
 }
 
 async function callApi(path, payload) {
-  const apiKey = $("keyInp").value.trim();
-  if (!apiKey) throw new Error("X-APIKEY belum diisi.");
-  const r = await fetch("/api/proxy", {
+  const r = await fetch(path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ path, payload, apiKey })
+    body: JSON.stringify(payload)
   });
   const txt = await r.text();
-  let d; try { d = JSON.parse(txt); } catch { d = txt; }
-  const lim = d?.limit?.free_left ?? d?.limit?.remaining ?? d?.limit?.total;
-  if (lim !== undefined && lim !== null) $("limitVal").innerText = lim;
-  return { status: r.status, d };
+  try { return { status: r.status, d: JSON.parse(txt) }; }
+  catch { return { status: r.status, d: txt }; }
 }
 
 async function sendLink() {
@@ -49,7 +41,7 @@ async function sendLink() {
   $("sentBox").classList.add("hidden");
   log(`[SEND] Mengirim magic link ke ${gmail}...`);
   try {
-    const { status, d } = await callApi("/api/send", { gmail });
+    const { status, d } = await callApi("/api/proxy", { path: "/api/send", payload: { gmail } });
     if (status >= 200 && status < 300 && d?.success !== false) {
       log(`[SEND] Mengirim magic link ke ${gmail}...\n[OK] Magic link terkirim.`);
       $("sentMsg").innerText = `Magic link berhasil dikirim ke ${gmail}. Cek inbox/spam lalu klik Lanjut Verifikasi.`;
@@ -64,7 +56,7 @@ async function verifyLink() {
   $("verBox").classList.add("hidden");
   log(`[VERIFY] Memverifikasi link untuk ${gmail}...`);
   try {
-    const { status, d } = await callApi("/api/verify", { gmail, link });
+    const { status, d } = await callApi("/api/proxy", { path: "/api/verify", payload: { gmail, link } });
     if (status >= 200 && status < 300 && d?.success !== false) {
       log(`[HTTP ${status}]\n` + JSON.stringify(d, null, 2));
       $("verMsg").innerText = `Aktif: ${d?.userData?.email || gmail} (${d?.userData?.planName || "Premium"})`;
@@ -74,4 +66,4 @@ async function verifyLink() {
 }
 
 function copyLog() { navigator.clipboard.writeText($("logOut").innerText); }
-                                        
+    
