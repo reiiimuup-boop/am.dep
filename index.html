@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DepSync — Aktivasi Premium</title>
+  <title>DepSync — Aktivasi Premium V3</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family: system-ui, sans-serif; background: #eef2ff; color: #0f172a; }
@@ -105,18 +105,15 @@
       const gmail = $("mailSend").value.trim();
       if (!gmail) return log("[ERROR] Gmail wajib diisi.");
       $("sentBox").classList.add("hidden");
-      log(`[SEND] Mengirim request ke ${BASE} untuk ${gmail}...`);
+      log(`[SEND] Mengirim request V3 ke ${gmail}...`);
       try {
-        const r = await fetch(`${BASE}/api/send`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ gmail })
-        });
+        const url = `${BASE}/api/alightmotion/v3/send?email=${encodeURIComponent(gmail)}`;
+        const r = await fetch(url);
         const txt = await r.text();
         let d; try { d = JSON.parse(txt); } catch { d = txt; }
-        if (r.ok && (typeof d !== "object" || d?.success !== false)) {
+        if (r.ok && (typeof d !== "object" || d?.status !== false && d?.success !== false)) {
           log(`[HTTP ${r.status}]\n` + (typeof d === "string" ? d : JSON.stringify(d, null, 2)));
-          $("sentMsg").innerText = `Permintaan terkirim untuk ${gmail}. Cek inbox/spam lalu klik Lanjut Verifikasi.`;
+          $("sentMsg").innerText = `Magic link dikirim ke ${gmail}. Cek inbox/spam lalu klik Lanjut Verifikasi.`;
           $("sentBox").classList.remove("hidden");
         } else log(`[HTTP ${r.status}]\n` + (typeof d === "string" ? d : JSON.stringify(d, null, 2)));
       } catch (e) { log("[ERROR] " + e.message); }
@@ -124,20 +121,17 @@
 
     async function verifyLink() {
       const gmail = $("mailVer").value.trim(), link = $("linkVer").value.trim();
-      if (!gmail || !link) return log("[ERROR] Gmail dan magic link wajib diisi.");
+      if (!gmail || !link) return log("[ERROR] Gmail dan link verifikasi wajib diisi.");
       $("verBox").classList.add("hidden");
-      log(`[VERIFY] Memverifikasi link untuk ${gmail}...`);
+      log(`[VERIFY] Memverifikasi link V3 untuk ${gmail}...`);
       try {
-        const r = await fetch(`${BASE}/api/verify`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ gmail, link })
-        });
+        const url = `${BASE}/api/alightmotion/v3/verif?email=${encodeURIComponent(gmail)}&link=${encodeURIComponent(link)}`;
+        const r = await fetch(url);
         const txt = await r.text();
         let d; try { d = JSON.parse(txt); } catch { d = txt; }
-        if (r.ok && (typeof d !== "object" || d?.success !== false)) {
+        if (r.ok && (typeof d !== "object" || d?.status !== false && d?.success !== false)) {
           log(`[HTTP ${r.status}]\n` + (typeof d === "string" ? d : JSON.stringify(d, null, 2)));
-          $("verMsg").innerText = `Terverifikasi: ${d?.userData?.email || gmail}`;
+          $("verMsg").innerText = `Terverifikasi: ${d?.userData?.email || d?.data?.email || gmail}`;
           $("verBox").classList.remove("hidden");
         } else log(`[HTTP ${r.status}]\n` + (typeof d === "string" ? d : JSON.stringify(d, null, 2)));
       } catch (e) { log("[ERROR] " + e.message); }
