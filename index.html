@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DepSync — API Docs</title>
+  <title>DepSync — Aktivasi Premium & Docs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -11,7 +11,9 @@
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #f8fafc;
+      background-color: #eef2ff;
+      background-image: radial-gradient(#cbd5e1 1.25px, transparent 1.25px);
+      background-size: 18px 18px;
       color: #0f172a;
     }
     code, pre {
@@ -20,11 +22,11 @@
     .card-comic {
       background: #ffffff;
       border: 2.5px solid #0f172a;
-      box-shadow: 4px 4px 0px #0f172a;
-      border-radius: 18px;
+      box-shadow: 5px 5px 0px #0f172a;
+      border-radius: 20px;
     }
     .btn-comic {
-      border: 2px solid #0f172a;
+      border: 2.5px solid #0f172a;
       box-shadow: 3px 3px 0px #0f172a;
       transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
@@ -32,9 +34,14 @@
       transform: translate(2px, 2px);
       box-shadow: 1px 1px 0px #0f172a;
     }
+    .title-comic {
+      color: #60a5fa;
+      -webkit-text-stroke: 2px #0f172a;
+      text-shadow: 3px 3px 0px #0f172a;
+    }
   </style>
 </head>
-<body class="min-h-screen pb-16">
+<body class="min-h-screen pb-24">
 
   <!-- Topbar -->
   <header class="sticky top-0 z-30 bg-white border-b-2 border-slate-900">
@@ -60,16 +67,19 @@
       </div>
     </div>
 
-    <!-- Quick Navigation Drawer -->
+    <!-- Quick Navigation -->
     <nav id="quickNav" class="hidden border-t-2 border-slate-900 bg-amber-50">
       <div class="max-w-3xl mx-auto px-4 py-3 flex flex-wrap gap-2 text-xs font-extrabold">
-        <a href="#kirim-magic-link" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900 hover:bg-amber-200">
+        <a href="#aktivasi-premium" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-amber-300 border-2 border-slate-900">
+          Aktivasi Premium
+        </a>
+        <a href="#kirim-magic-link" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900">
           POST /api/send
         </a>
-        <a href="#verifikasi-aktifkan" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900 hover:bg-amber-200">
+        <a href="#verifikasi-aktifkan" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900">
           Verifikasi & Aktifkan
         </a>
-        <a href="#generate-massal" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900 hover:bg-amber-200">
+        <a href="#generate-massal" onclick="toggleNav(false)" class="px-3 py-1.5 rounded-lg bg-white border-2 border-slate-900">
           POST /api/bulk
         </a>
       </div>
@@ -78,256 +88,186 @@
 
   <main class="max-w-3xl mx-auto px-4 pt-6 space-y-8">
 
-    <!-- 1. KIRIM MAGIC LINK -->
-    <section id="kirim-magic-link" class="space-y-4">
-      <div class="card-comic p-5 sm:p-6 space-y-4">
-        <div class="flex flex-wrap items-center gap-2.5">
-          <span class="px-3 py-1 rounded-full bg-amber-300 border-2 border-slate-900 font-extrabold text-xs">
-            POST
-          </span>
-          <code class="text-base sm:text-lg font-bold text-slate-900">/api/send</code>
+    <!-- BAGIAN AKTIVASI PREMIUM -->
+    <section id="aktivasi-premium" class="space-y-4">
+      <div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-none title-comic">
+          AKTIVASI<br>PREMIUM
+        </h1>
+        <p class="text-slate-600 mt-3 text-sm sm:text-base font-medium leading-relaxed">
+          Kirim magic link ke Gmail, tempel linknya, Alight Motion Premium 1 tahun langsung aktif. Tanpa kata sandi.
+        </p>
+      </div>
+
+      <!-- Card Form Kirim Link / Verifikasi -->
+      <div class="card-comic p-4 sm:p-5 space-y-4">
+        <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-2xl border-2 border-slate-900">
+          <button
+            id="tabSend"
+            type="button"
+            onclick="switchTab('send')"
+            class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-[#111c3a] text-amber-300 border-2 border-slate-900"
+          >
+            1 · KIRIM LINK
+          </button>
+          <button
+            id="tabVerify"
+            type="button"
+            onclick="switchTab('verify')"
+            class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-slate-900 border-2 border-transparent"
+          >
+            🛡️ 2 · VERIFIKASI
+          </button>
         </div>
 
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
-            🔗 KIRIM MAGIC LINK
-          </h1>
-          <p class="text-slate-600 mt-1 text-sm sm:text-base">
-            Kirim magic link Alight Motion ke Gmail target.
-          </p>
+        <!-- Form 1: Kirim Link -->
+        <div id="panelSend" class="space-y-4">
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-2">
+              ✉️ ALAMAT GMAIL
+            </label>
+            <input
+              id="gmailSendInput"
+              type="email"
+              placeholder="user@gmail.com"
+              class="w-full px-4 py-3 rounded-xl border-2 border-slate-900 text-sm sm:text-base font-medium bg-white focus:outline-none focus:bg-amber-50/50"
+            />
+          </div>
+
+          <button
+            type="button"
+            onclick="handleSendLink()"
+            class="btn-comic w-full py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm sm:text-base tracking-wide"
+          >
+            ✈️ KIRIM MAGIC LINK
+          </button>
         </div>
 
-        <div class="bg-amber-50 border-2 border-slate-900 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-slate-800">
-          🔒 TIDAK MEMOTONG LIMIT, TAPI AKUN HARUS MASIH PUNYA SISA LIMIT.
+        <!-- Form 2: Verifikasi -->
+        <div id="panelVerify" class="hidden space-y-4">
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-2">
+              ✉️ ALAMAT GMAIL
+            </label>
+            <input
+              id="gmailVerifyInput"
+              type="email"
+              placeholder="user@gmail.com"
+              class="w-full px-4 py-3 rounded-xl border-2 border-slate-900 text-sm sm:text-base font-medium bg-white focus:outline-none focus:bg-amber-50/50"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-2">
+              🔗 MAGIC LINK DARI EMAIL
+            </label>
+            <input
+              id="magicLinkInput"
+              type="url"
+              placeholder="https://alight-creative.firebaseapp.com/..."
+              class="w-full px-4 py-3 rounded-xl border-2 border-slate-900 text-sm sm:text-base font-medium bg-white focus:outline-none focus:bg-amber-50/50"
+            />
+          </div>
+
+          <button
+            type="button"
+            onclick="handleVerifyLink()"
+            class="btn-comic w-full py-3.5 px-4 rounded-xl bg-amber-300 hover:bg-amber-400 text-slate-900 font-extrabold text-sm sm:text-base tracking-wide"
+          >
+            🛡️ VERIFIKASI & AKTIFKAN
+          </button>
         </div>
       </div>
 
-      <div class="card-comic p-5 sm:p-6 space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
-            Contoh Request
-          </span>
+      <!-- Terminal Log Card -->
+      <div class="card-comic overflow-hidden">
+        <div class="px-4 py-2.5 bg-white border-b-2 border-slate-900 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-rose-500 border border-slate-900 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-400 border border-slate-900 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-400 border border-slate-900 inline-block"></span>
+            </div>
+            <span class="text-xs font-extrabold font-mono text-slate-800">AM_TERMINAL.LOG</span>
+          </div>
           <button
-            onclick="copyCode('reqSend', this)"
-            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
+            type="button"
+            onclick="copyCode('terminalLog', this)"
+            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-2.5 py-1 rounded-lg"
           >
-            📋 SALIN
+            📋
           </button>
         </div>
-        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
+        <div class="bg-[#111c3a] text-slate-100 p-4 text-xs sm:text-sm font-mono overflow-x-auto min-h-[76px]">
+          <pre id="terminalLog" class="whitespace-pre-wrap"><span class="text-amber-300">[SYSTEM]</span> Siap digunakan.</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOKUMENTASI API -->
+    <section id="kirim-magic-link" class="space-y-4 pt-2">
+      <div class="card-comic p-5 sm:p-6 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <span class="px-3 py-1 rounded-full bg-amber-300 border-2 border-slate-900 font-extrabold text-xs">POST</span>
+          <code class="text-base font-bold">/api/send</code>
+        </div>
+        <h2 class="text-xl font-extrabold">🔗 KIRIM MAGIC LINK</h2>
+        <p class="text-sm text-slate-600">Kirim magic link Alight Motion ke Gmail target.</p>
+        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm">
 <pre id="reqSend">const r = await fetch("https://am.dapjisync.my.id/api/send", {
   method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "x-apikey": "YOUR_API_KEY"
-  },
-  body: JSON.stringify({
-    "gmail": "user@gmail.com"
-  })
-});
-console.log(r.status, await r.json());</pre>
-        </div>
-      </div>
-
-      <div class="card-comic p-5 sm:p-6 space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
-            Contoh Respons 200
-          </span>
-          <button
-            onclick="copyCode('resSend', this)"
-            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
-          >
-            📋 SALIN
-          </button>
-        </div>
-        <div class="bg-[#111c3a] text-emerald-300 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
-<pre id="resSend">{
-  "success": true,
-  "email": "user@gmail.com",
-  "message": "Magic link berhasil dikirim."
-}</pre>
+  headers: { "Content-Type": "application/json", "x-apikey": "YOUR_API_KEY" },
+  body: JSON.stringify({ "gmail": "user@gmail.com" })
+});</pre>
         </div>
       </div>
     </section>
 
-    <!-- 2. VERIFIKASI & AKTIFKAN -->
     <section id="verifikasi-aktifkan" class="space-y-4">
-      <div class="card-comic p-5 sm:p-6 space-y-4">
-        <div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
-            🛡️ VERIFIKASI & AKTIFKAN
-          </h2>
-          <p class="text-slate-600 mt-1 text-sm sm:text-base">
-            Tempel magic link dari email untuk aktivasi Premium 1 tahun.
-          </p>
-        </div>
-
-        <div class="bg-amber-50 border-2 border-slate-900 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-slate-800">
-          ↻ MEMOTONG 1 LIMIT. DIKEMBALIKAN OTOMATIS JIKA GAGAL. OPSIONAL: ORDERID (CUSTOM ORDER ID, KHUSUS AKUN YANG SUDAH BELI AKSES / LIMIT).
-        </div>
-      </div>
-
       <div class="card-comic p-5 sm:p-6 space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
-            Contoh Request
-          </span>
-          <button
-            onclick="copyCode('reqVerify', this)"
-            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
-          >
-            📋 SALIN
-          </button>
-        </div>
-        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
+        <h2 class="text-xl font-extrabold">🛡️ VERIFIKASI & AKTIFKAN</h2>
+        <p class="text-sm text-slate-600">Tempel magic link dari email untuk aktivasi Premium 1 tahun.</p>
+        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm">
 <pre id="reqVerify">const r = await fetch("https://am.dapjisync.my.id/api/verify", {
   method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "x-apikey": "YOUR_API_KEY"
-  },
-  body: JSON.stringify({
-    "gmail": "user@gmail.com",
-    "link": "https://alight-creative.firebaseapp.com/..."
-  })
-});
-console.log(r.status, await r.json());</pre>
-        </div>
-      </div>
-
-      <div class="card-comic p-5 sm:p-6 space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
-            Contoh Respons 200
-          </span>
-          <button
-            onclick="copyCode('resVerify', this)"
-            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
-          >
-            📋 SALIN
-          </button>
-        </div>
-        <div class="bg-[#111c3a] text-emerald-300 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
-<pre id="resVerify">{
-  "ok": true,
-  "success": true,
-  "creator": "depsync",
-  "authenticated": true,
-  "premiumActive": true,
-  "userData": {
-    "email": "user@gmail.com",
-    "status": "ACTIVE",
-    "tier": "Subscriber",
-    "planName": "1-Year VIP Pro",
-    "orderId": "depsync.my.id-XXXXXX",
-    "validUntil": "1 September 2027"
-  },
-  "message": "Verifikasi akun berhasil, Alight Motion VIP Pro aktif.",
-  "limit_used": 1,
-  "limit": { "total": 10, "free_left": 10 }
-}</pre>
+  headers: { "Content-Type": "application/json", "x-apikey": "YOUR_API_KEY" },
+  body: JSON.stringify({ "gmail": "user@gmail.com", "link": "https://alight-creative.firebaseapp.com/..." })
+});</pre>
         </div>
       </div>
     </section>
 
-    <!-- 3. GENERATE MASSAL -->
     <section id="generate-massal" class="space-y-4">
-      <div class="card-comic p-5 sm:p-6 space-y-4">
-        <div class="flex flex-wrap items-center gap-2.5">
-          <span class="px-3 py-1 rounded-full bg-amber-300 border-2 border-slate-900 font-extrabold text-xs">
-            POST
-          </span>
-          <code class="text-base sm:text-lg font-bold text-slate-900">/api/bulk</code>
-        </div>
-
-        <div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
-            ★ GENERATE MASSAL
-          </h2>
-          <p class="text-slate-600 mt-1 text-sm sm:text-base leading-relaxed">
-            Buat beberapa akun Premium sekaligus (maks diatur admin, default 5) (email sementara otomatis). provider: <code class="font-bold text-slate-900">akunlama | generator | emailnator | inboxkitten | tmailcloud | emailqu | random</code> (default <code class="font-bold text-slate-900">akunlama</code>).
-          </p>
-        </div>
-
-        <div class="bg-amber-50 border-2 border-slate-900 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-slate-800">
-          ↻ MEMOTONG SEBANYAK JUMLAH AKUN. LIMIT AKUN YANG GAGAL DIKEMBALIKAN. OPSIONAL: ORDERID (CUSTOM ORDER ID, KHUSUS AKUN YANG SUDAH BELI AKSES / LIMIT).
-        </div>
-      </div>
-
       <div class="card-comic p-5 sm:p-6 space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
-            Contoh Request
-          </span>
-          <button
-            onclick="copyCode('reqBulk', this)"
-            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
-          >
-            📋 SALIN
-          </button>
+        <div class="flex items-center gap-2.5">
+          <span class="px-3 py-1 rounded-full bg-amber-300 border-2 border-slate-900 font-extrabold text-xs">POST</span>
+          <code class="text-base font-bold">/api/bulk</code>
         </div>
-        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
+        <h2 class="text-xl font-extrabold">★ GENERATE MASSAL</h2>
+        <p class="text-sm text-slate-600">Buat beberapa akun Premium sekaligus dengan email sementara otomatis.</p>
+        <div class="bg-[#111c3a] text-slate-100 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm">
 <pre id="reqBulk">const r = await fetch("https://am.dapjisync.my.id/api/bulk", {
   method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "x-apikey": "YOUR_API_KEY"
-  },
-  body: JSON.stringify({
-    "total": 1,
-    "provider": "akunlama"
-  })
-});
-console.log(r.status, await r.json());</pre>
-        </div>
-      </div>
-
-      <div class="card-comic p-5 sm:p-6 space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-slate-700">
-            Contoh Respons 200
-          </span>
-          <button
-            onclick="copyCode('resBulk', this)"
-            class="btn-comic bg-white hover:bg-slate-100 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl"
-          >
-            📋 SALIN
-          </button>
-        </div>
-        <div class="bg-[#111c3a] text-emerald-300 rounded-2xl border-2 border-slate-900 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
-<pre id="resBulk">{
-  "ok": true,
-  "success": true,
-  "creator": "depsync",
-  "status": true,
-  "total": 1,
-  "successCount": 1,
-  "failCount": 0,
-  "message": "Akun Alight Motion VIP Pro berhasil dibuat.",
-  "batch": [{
-    "ok": true,
-    "success": true,
-    "status": true,
-    "email": "ampremxxxxxx@akunlama.com",
-    "provider": "akunlama",
-    "inbox_link": "https://akunlama.com/inbox/...",
-    "membershipStatus": "active",
-    "tier": "Subscriber",
-    "planName": "1-Year VIP Pro",
-    "subscription": "Yearly Membership",
-    "orderId": "depsync.my.id-XXXXX",
-    "validUntil": "1 September 2027",
-    "message": "Akun Alight Motion VIP Pro aktif."
-  }],
-  "limit_used": 1,
-  "limit": { "total": 10, "free_left": 10 }
-}</pre>
+  headers: { "Content-Type": "application/json", "x-apikey": "YOUR_API_KEY" },
+  body: JSON.stringify({ "total": 1, "provider": "akunlama" })
+});</pre>
         </div>
       </div>
     </section>
 
   </main>
+
+  <!-- Bottom Floating Nav -->
+  <div class="fixed bottom-4 inset-x-0 z-30 px-4">
+    <div class="max-w-md mx-auto bg-white border-2.5 border-slate-900 shadow-[4px_4px_0px_#0f172a] rounded-full px-5 py-2.5 flex items-center justify-between text-xs font-extrabold">
+      <a href="#aktivasi-premium" class="px-3 py-1.5 rounded-full bg-amber-300 border-2 border-slate-900 text-slate-900">
+        ⚡ Activation
+      </a>
+      <a href="#kirim-magic-link" class="text-slate-700 hover:text-slate-950">Send</a>
+      <a href="#verifikasi-aktifkan" class="text-slate-700 hover:text-slate-950">Verify</a>
+      <a href="#generate-massal" class="text-slate-700 hover:text-slate-950">&lt;/&gt; Docs</a>
+    </div>
+  </div>
 
   <script>
     function toggleNav(forceState) {
@@ -339,15 +279,58 @@ console.log(r.status, await r.json());</pre>
       }
     }
 
+    function switchTab(mode) {
+      const tabSend = document.getElementById('tabSend');
+      const tabVerify = document.getElementById('tabVerify');
+      const panelSend = document.getElementById('panelSend');
+      const panelVerify = document.getElementById('panelVerify');
+
+      if (mode === 'send') {
+        tabSend.className = "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-[#111c3a] text-amber-300 border-2 border-slate-900";
+        tabVerify.className = "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-slate-900 border-2 border-transparent";
+        panelSend.classList.remove('hidden');
+        panelVerify.classList.add('hidden');
+      } else {
+        tabVerify.className = "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-[#111c3a] text-amber-300 border-2 border-slate-900";
+        tabSend.className = "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold bg-white text-slate-900 border-2 border-transparent";
+        panelVerify.classList.remove('hidden');
+        panelSend.classList.add('hidden');
+      }
+    }
+
+    function setLog(text) {
+      document.getElementById('terminalLog').innerText = text;
+    }
+
+    function handleSendLink() {
+      const gmail = document.getElementById('gmailSendInput').value.trim();
+      if (!gmail) {
+        setLog("[ERROR] Masukkan alamat Gmail terlebih dahulu.");
+        return;
+      }
+      setLog(`[INFO] Menyiapkan permintaan magic link untuk ${gmail}...\n[NOTE] Hubungkan endpoint POST /api/send di backend/API Anda untuk eksekusi langsung.`);
+    }
+
+    function handleVerifyLink() {
+      const gmail = document.getElementById('gmailVerifyInput').value.trim();
+      const link = document.getElementById('magicLinkInput').value.trim();
+      if (!gmail || !link) {
+        setLog("[ERROR] Lengkapi alamat Gmail dan magic link terlebih dahulu.");
+        return;
+      }
+      setLog(`[INFO] Memverifikasi link untuk ${gmail}...\n[NOTE] Hubungkan endpoint verifikasi di backend/API Anda untuk eksekusi langsung.`);
+    }
+
     function copyCode(elementId, btn) {
       const text = document.getElementById(elementId).innerText;
       navigator.clipboard.writeText(text);
       const prev = btn.innerText;
-      btn.innerText = '✅ TERSALIN';
+      btn.innerText = '✅';
       setTimeout(() => {
         btn.innerText = prev;
       }, 1500);
     }
   </script>
 </body>
-</html>
+  </html>
+  
